@@ -1,0 +1,9 @@
+build
+bin
+.vscode
+
+# Cmake
+CMakeCache.txt
+CMakeFiles
+CMakeScripts
+
