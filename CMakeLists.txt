@@ -18,13 +18,22 @@ file(GLOB SOURCES src/lazarus/*)
 
 add_library(${LIBRARY_NAME} SHARED ${SOURCES})
 
-# TODO: Add option to link SFML statically
-# Detect and link SFML 2.5
+# Windows specifics
+if(WIN32)
+    set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
+    set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
+    set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
+    # For now, SFML has to be located in the game's root directory
+    set(SFML_DIR ${PROJECT_SOURCE_DIR}/../SFML/lib/cmake/SFML)
+    set(SFML_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/../SFML/include)
+endif()
+
+# SFML
 find_package(SFML 2.5 COMPONENTS graphics audio REQUIRED)
 if(SFML_FOUND)
-    include_directories(${SFML_INCLUDE_DIR})
     # Only the highest level is needed, other dependencies (windows, system, etc)
     # are automatically resolved
+    target_include_directories(${LIBRARY_NAME} PRIVATE ${SFML_INCLUDE_DIR})
     target_link_libraries(${LIBRARY_NAME} sfml-graphics)
 else()
     message(FATAL_ERROR "SFML was not found.")
