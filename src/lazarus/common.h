@@ -9,6 +9,8 @@
 #define DEBUG(...)
 #endif
 
+using ulong = unsigned long;
+
 /**
  * Class for exceptions related to the Lazarus engine.
  * 

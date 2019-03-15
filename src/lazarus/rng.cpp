@@ -14,20 +14,37 @@ void Random::Seed()
         std::random_device randomDevice;
         m_generator.seed(randomDevice());
     }
-    catch(const std::exception& e)
+    catch (const std::exception &e)
     {
-        // Random device not available
-        // Use a time seed
+        // Random device not available, use a time seed
         unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
         m_generator.seed(seed);
     }
 }
 
-long Random::rng(long a, long b)
+long Random::range(long a, long b)
 {
     if (a > b)
         std::swap(a, b);
 
     std::uniform_int_distribution<long> dist(a, b);
     return dist(m_generator);
+}
+
+ulong Random::roll(unsigned sides, unsigned times)
+{
+    if (sides < 2 || times < 1)
+        return times;
+    std::uniform_int_distribution<unsigned> dist(1, sides);
+    ulong total = 0;
+    for (unsigned t = 0; t < times; ++t)
+        total += dist(m_generator);
+    return total;
+}
+
+bool Random::oneIn(unsigned n)
+{
+    if (n < 2)
+        return true;
+    return Random::range(1, n) == 1;
 }
