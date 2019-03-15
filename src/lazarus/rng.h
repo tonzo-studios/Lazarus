@@ -1,4 +1,8 @@
+#pragma once
+
 #include <random>
+
+#include <lazarus/common.h>
 
 class Random
 {
@@ -15,7 +19,18 @@ public:
     * If a < b, then it will return an integer in [a, b].
     * Otherwise, it will be between [b, a].
     */
-    static long rng(long a, long b);
+    static long range(long a, long b);
+
+    /**
+     * Rolls a dice with the specified number of sides a certain number of times
+     * and returns the total result.
+     */
+    static ulong roll(unsigned sides=6, unsigned times=1);
+
+    /**
+     * Return true with a 1 in n probability.
+     */
+    static bool oneIn(unsigned n);
 
 private:
     static std::mt19937 m_generator;
