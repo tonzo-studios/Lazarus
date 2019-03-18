@@ -4,6 +4,8 @@
 
 #include <lazarus/common.h>
 
+namespace lz
+{
 class Random
 {
 public:
@@ -11,7 +13,7 @@ public:
      * Sets a new seed for the random generator using a hardware random device if
      * available, or a seed using the current time.
      */
-    static void Seed();
+    static void seed();
 
     /**
     * Return a random integer between the two given numbers, both ends included.
@@ -33,5 +35,6 @@ public:
     static bool oneIn(unsigned n);
 
 private:
-    static std::mt19937 m_generator;
+    static std::mt19937 generator;
 };
+}
