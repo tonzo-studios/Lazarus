@@ -16,7 +16,7 @@ include(CTest)
 
 set(LIBRARY_NAME "lazarus")
 
-file(GLOB SOURCES src/lazarus/*)
+file(GLOB_RECURSE SOURCES src/lazarus/*)
 
 add_library(${LIBRARY_NAME} SHARED ${SOURCES})
 

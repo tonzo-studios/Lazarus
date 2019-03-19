@@ -94,15 +94,6 @@ private:
     std::unordered_map<std::type_index, std::shared_ptr<BaseComponent>> components;
 };
 
-class EntityHolder
-{
-public:
-    // TODO: Methods to iterate over entities
-
-private:
-    std::vector<std::shared_ptr<Entity>> entityList;
-};
-
 template <typename T>
 bool Entity::has() const
 {

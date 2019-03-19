@@ -1,4 +1,4 @@
-#include <lazarus/ecs.h>
+#include <lazarus/ECS/Entity.h>
 
 size_t lz::Entity::entityCount = 0;
 
