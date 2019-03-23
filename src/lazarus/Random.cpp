@@ -4,9 +4,11 @@
 #include <chrono>
 #include <random>
 
-std::mt19937 lz::Random::generator;  // Initialize with default seed (5489u)
+using namespace lz;
 
-void lz::Random::seed()
+std::mt19937 Random::generator;  // Initialize with default seed (5489u)
+
+void Random::seed()
 {
     try
     {
@@ -22,7 +24,7 @@ void lz::Random::seed()
     }
 }
 
-long lz::Random::range(long a, long b)
+long Random::range(long a, long b)
 {
     if (a > b)
         std::swap(a, b);
@@ -31,7 +33,7 @@ long lz::Random::range(long a, long b)
     return dist(generator);
 }
 
-ulong lz::Random::roll(unsigned sides, unsigned times)
+ulong Random::roll(unsigned sides, unsigned times)
 {
     if (sides < 2 || times < 1)
         return times;
@@ -42,9 +44,9 @@ ulong lz::Random::roll(unsigned sides, unsigned times)
     return total;
 }
 
-bool lz::Random::oneIn(unsigned n)
+bool Random::oneIn(unsigned n)
 {
     if (n < 2)
         return true;
-    return lz::Random::range(1, n) == 1;
+    return Random::range(1, n) == 1;
 }
