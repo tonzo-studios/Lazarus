@@ -34,11 +34,12 @@ public:
                 >* = nullptr>
     static typename std::common_type<T, U>::type range(T a, U b)
     {
-        auto _a = static_cast<typename std::common_type<T, U>::type>(a);
-        auto _b = static_cast<typename std::common_type<T, U>::type>(b);
+        typedef typename std::common_type<T, U>::type common_type;
+        auto _a = static_cast<common_type>(a);
+        auto _b = static_cast<common_type>(b);
         if (_a > _b)
             std::swap(_a, _b);
-        return std::uniform_int_distribution<T>(_a, _b)(generator);
+        return std::uniform_int_distribution<common_type>(_a, _b)(generator);
     }
 
     /**
@@ -59,11 +60,12 @@ public:
                 >* = nullptr>
     static typename std::common_type<T, U>::type range(T a, U b)
     {
-        auto _a = static_cast<typename std::common_type<T, U>::type>(a);
-        auto _b = static_cast<typename std::common_type<T, U>::type>(b);
+        typedef typename std::common_type<T, U>::type common_type;
+        auto _a = static_cast<common_type>(a);
+        auto _b = static_cast<common_type>(b);
         if (_a > _b)
             std::swap(_a, _b);
-        return std::uniform_real_distribution<T>(_a, _b)(generator);
+        return std::uniform_real_distribution<common_type>(_a, _b)(generator);
     }
 
     /**
