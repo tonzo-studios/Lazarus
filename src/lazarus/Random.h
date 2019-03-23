@@ -1,5 +1,6 @@
 #pragma once
 
+#include <stdexcept>
 #include <random>
 #include <type_traits>
 
@@ -90,7 +91,31 @@ public:
      */
     static double normal(double mean, double stdev);
 
+    /**
+     * Return a reference to a random item from a container.
+     * 
+     * The container must support the size() method, and the
+     * operator [] to get an element from the container.
+     * If the container is empty, an exception will be thrown.
+     */
+    template <typename C, typename T = typename C::value_type>
+    static T& choice(C& container);
+
 private:
     static std::mt19937 generator;
 };
+
+template <typename C, typename T = typename C::value_type>
+T& Random::choice(C& container)
+{
+    // Use size() instead of empty() to make conditions less restrictive
+    size_t size = container.size();
+    if (size == 0)
+        // TODO: Use own exception class
+        throw new std::runtime_error("Container is empty");
+    
+    size_t idx = Random::range(0, size - 1);
+    return container[idx];
+}
+
 }  // namespace lz
