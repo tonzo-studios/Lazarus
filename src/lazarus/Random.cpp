@@ -1,4 +1,4 @@
-#include <lazarus/rng.h>
+#include <lazarus/Random.h>
 
 #include <algorithm>
 #include <chrono>
