@@ -33,6 +33,8 @@ struct BaseComponent
 
     /**
      * ID of the entity that holds this component.
+     * 
+     * It is set upon calling Entity::addComponent.
      */
     size_t entityId;
 };
@@ -81,6 +83,15 @@ public:
     void addComponent(Args&&... args);
 
     /**
+     * Removes the component of type T from the entity.
+     * 
+     * If the entity does not have a component of the specified type, an exception
+     * is thrown.
+     */
+    template <typename T>
+    void removeComponent();
+
+    /**
      * Returns a pointer to the entity's component of the specified type.
      * 
      * If the entity does not hold a component of that type, a nullptr will be returned.
@@ -88,10 +99,17 @@ public:
     template <typename T>
     T* get();
 
+    /**
+     * Returns whether this entity is marked for deletion upon the next pass of
+     * the garbage collector.
+     */
+    bool isDeleted() const { return deleted; }
+
 private:
     const size_t entityId;
-    static size_t entityCount;
+    static size_t entityCount;  // Keep track of the number of entities to assign new IDs
     std::unordered_map<std::type_index, std::shared_ptr<BaseComponent>> components;
+    bool deleted = false;
 };
 
 template <typename T>
@@ -124,6 +142,16 @@ void Entity::addComponent(Args&&... args)
 }
 
 template <typename T>
+void Entity::removeComponent()
+{
+    if (!has<T>())
+        // TODO: Make own exception class
+        throw new std::runtime_error("The entity already holds a component of the same type");
+
+    components.erase(__lz::getTypeIndex<T>());
+}
+
+template <typename T>
 T* Entity::get()
 {
     auto found = components.find(__lz::getTypeIndex<T>());
@@ -131,4 +159,4 @@ T* Entity::get()
         return nullptr;
     return dynamic_cast<T*>(found->second.get());
 }
-}
+}  // namespace lz

@@ -1,8 +1,10 @@
 #include <lazarus/ECS/Entity.h>
 
-size_t lz::Entity::entityCount = 0;
+using namespace lz;
 
-lz::Entity::Entity()
+size_t Entity::entityCount = 0;
+
+Entity::Entity()
     : entityId(++entityCount)
 {
 }
