@@ -9,12 +9,24 @@
 #define DEBUG(...)
 #endif
 
-class LazarusException : std::runtime_error
+/**
+ * Class for exceptions related to the Lazarus engine.
+ * 
+ * Meant only for internal use.
+ */
+namespace __lz
+{    
+class LazarusException : public std::runtime_error
 {
 public:
-  LazarusException(const std::string &msg);
+  LazarusException(const std::string &msg)
+      : std::runtime_error(msg)
+  {
+  }
+
   const char *c_str() const noexcept
   {
       return what();
   }
 };
+}
