@@ -1,6 +1,7 @@
 #pragma once
 
 #include <random>
+#include <type_traits>
 
 #include <lazarus/common.h>
 
@@ -16,20 +17,54 @@ public:
     static void seed();
 
     /**
-    * Return a random integer between the two given numbers with equal probability.
+    * Return a random integral between the two given numbers with equal probability.
     * 
-    * If a < b, then it will return an integer in [a, b].
+    * If a < b, then it will return an integral in [a, b].
     * Otherwise, it will be in [b, a].
+    * 
+    * Type is automatically detected, and the return type will be the most
+    * appropriate type depending on the argument types.
+    * For example, range(int, unsigned) will return an unsigned, and
+    * range(short, long) will return a long.
     */
-    static long range(long a, long b);
+    template <typename T, typename U,
+              typename std::enable_if_t<
+                (std::is_integral<T>::value || std::is_unsigned<T>::value)
+                && (std::is_integral<U>::value || std::is_unsigned<U>::value)
+                >* = nullptr>
+    static typename std::common_type<T, U>::type range(T a, U b)
+    {
+        auto _a = static_cast<typename std::common_type<T, U>::type>(a);
+        auto _b = static_cast<typename std::common_type<T, U>::type>(b);
+        if (_a > _b)
+            std::swap(_a, _b);
+        return std::uniform_int_distribution<T>(_a, _b)(generator);
+    }
 
     /**
-     * Return a random floating point between the two given numbers with equal probability.
-     * 
-     * If a < b, then it will return a double in [a, b).
-     * Otherwise, it will be in [b, a).
-     */
-    static double rangeReal(double a, double b);
+    * Return a random floating point number between the two given numbers
+    * with equal probability.
+    * 
+    * If a < b, then it will return an integral in [a, b).
+    * Otherwise, it will be in [b, a).
+    * 
+    * Type is automatically detected, and the return type will be the most
+    * appropriate type depending on the argument types.
+    * For example, range(float, double) will return a double, and
+    * range(int, float) will return a float.
+    */
+    template <typename T, typename U,
+              typename std::enable_if_t<
+                std::is_floating_point<T>::value || std::is_floating_point<U>::value
+                >* = nullptr>
+    static typename std::common_type<T, U>::type range(T a, U b)
+    {
+        auto _a = static_cast<typename std::common_type<T, U>::type>(a);
+        auto _b = static_cast<typename std::common_type<T, U>::type>(b);
+        if (_a > _b)
+            std::swap(_a, _b);
+        return std::uniform_real_distribution<T>(_a, _b)(generator);
+    }
 
     /**
      * Rolls a dice with the specified number of sides a certain number of times
@@ -56,4 +91,4 @@ public:
 private:
     static std::mt19937 generator;
 };
-}
+}  // namespace lz
