@@ -8,6 +8,20 @@
 
 namespace lz
 {
+/**
+ * The Random class provides a simple interface for commonly used RNG functionality.
+ * 
+ * It is meant to be available from everywhere by providing static methods, but
+ * encapsulating the generation logic inside of it.
+ * 
+ * It is important that the user calls `lz::Random::seed()` at the beginning of
+ * their program to correctly seed the generator used with a pseudo-random number.
+ * After that, the user can call the methods from anywhere in their program, without
+ * having to ever instantiate a Random object, by just calling the methods within the
+ * namespace provided.
+ * 
+ * For example, `lz::Random::range(1, 5)` will produce a random integer between 1 and 5.
+ */
 class Random
 {
 public:
