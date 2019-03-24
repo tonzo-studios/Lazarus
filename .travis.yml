@@ -11,10 +11,12 @@ addons:
     packages:
       - cmake
       - doxygen
-      - libsfml-dev
 
 compiler: g++
 os: linux
+
+install:
+  - scripts/sfml.sh
 
 script:
   - scripts/build.sh
