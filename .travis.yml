@@ -1,5 +1,7 @@
 sudo: false
 
+language: c++
+
 branches:
   only:
     - master
@@ -7,10 +9,19 @@ branches:
 addons:
   apt:
     packages:
+      - cmake
       - doxygen
 
+compiler: gcc
+os: linux
+
+before_script:
+  - if [ -n "${CLANG}" ]; then COMPILER="$CLANG"; fi
+  - ${COMPILER} --version
+  - CXX="$COMPILER"
+
 script:
-  - doxygen Doxyfile
+  - scripts/build.sh
 
 deploy:
   provider: pages
