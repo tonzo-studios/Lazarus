@@ -15,11 +15,6 @@ addons:
 compiler: gcc
 os: linux
 
-before_script:
-  - if [ -n "${CLANG}" ]; then COMPILER="$CLANG"; fi
-  - ${COMPILER} --version
-  - CXX="$COMPILER"
-
 script:
   - scripts/build.sh
 
