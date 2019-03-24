@@ -1,6 +1,7 @@
 #include "catch/catch.hpp"
 
 #include <cmath>
+#include <typeinfo>
 #include <vector>
 
 #include <lazarus/Random.h>
@@ -88,3 +89,28 @@ TEST_CASE("normal distribution", "[random]")
     REQUIRE(equalFloat(Random::normal(0, 0), 0));
     REQUIRE(equalFloat(Random::normal(0, -1), -0.488176471));
 }
+
+TEST_CASE("float range", "[random]")
+{
+    Random::seed(TEST_SEED);
+    REQUIRE(equalFloat(Random::range(0., 2), 1.7803094265));
+    REQUIRE(equalFloat(Random::range(0, 2.), 0.26141458811));
+    REQUIRE(equalFloat(Random::range(-0.5, 0.5), -0.460240503));
+    REQUIRE(equalFloat(Random::range(0., 0.), 0));
+    REQUIRE(equalFloat(Random::range(1e-5, 2e-5), 1.5320779165e-5));
+
+}
+
+TEST_CASE("range types", "[random]")
+{
+    REQUIRE(typeid(Random::range(static_cast<int>(0), static_cast<int>(2))) == typeid(int));
+    REQUIRE(typeid(Random::range(static_cast<int>(0), static_cast<short>(2))) == typeid(int));
+    REQUIRE(typeid(Random::range(static_cast<short>(0), static_cast<short>(2))) == typeid(short));
+    REQUIRE(typeid(Random::range(static_cast<long>(0), static_cast<unsigned long long>(2))) == typeid(unsigned long long));
+    REQUIRE(typeid(Random::range(static_cast<int>(0), static_cast<float>(2))) == typeid(float));
+    REQUIRE(typeid(Random::range(static_cast<float>(0), static_cast<long>(2))) == typeid(float));
+    REQUIRE(typeid(Random::range(static_cast<double>(0), static_cast<float>(2))) == typeid(double));
+    REQUIRE(typeid(Random::range(static_cast<long>(0), static_cast<int>(2))) == typeid(long));
+    REQUIRE(typeid(Random::range(static_cast<char>(0), static_cast<double>(2))) == typeid(double));
+}
+
