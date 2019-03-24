@@ -8,7 +8,7 @@ set -ex
 build_type=Debug
 mkdir build
 cd build
-cmake -DCMAKE_BUILD_TYPE="$build_type" ..
+cmake -DCMAKE_BUILD_TYPE="$build_type" -DSFML_ROOT=../SFML/install ..
 make -j3
 cd tests
 [ -f lazarus_tests ] && sh -c ./lazarus_tests
