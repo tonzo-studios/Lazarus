@@ -11,8 +11,9 @@ addons:
     packages:
       - cmake
       - doxygen
+      - libsfml-dev
 
-compiler: gcc
+compiler: g++
 os: linux
 
 script:
