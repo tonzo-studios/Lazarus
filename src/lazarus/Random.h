@@ -32,6 +32,15 @@ public:
     static void seed();
 
     /**
+     * Sets the random generator to use the given seed.
+     * 
+     * Note that using the same seed will produce the same sequences of random
+     * numbers in different executions.
+     * This can be useful, for example, for testing.
+     */
+    static void seed(unsigned seed);
+
+    /**
     * Return a random integral between the two given numbers with equal probability.
     * 
     * If a < b, then it will return an integral in [a, b].
