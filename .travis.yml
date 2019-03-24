@@ -9,6 +9,7 @@ branches:
 addons:
   apt:
     packages:
+      - g++-5
       - cmake
       - doxygen
       - libopenal-dev
@@ -18,8 +19,11 @@ addons:
       - libfreetype6-dev
       - libvorbis-dev
       - libflac-dev
+    sources: &sources
+      - llvm-toolchain-precise-3.8
+      - ubuntu-toolchain-r-test
 
-compiler: g++
+compiler: g++-5
 os: linux
 
 install:
