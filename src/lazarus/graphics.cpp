@@ -4,7 +4,9 @@
 #include <cstdlib>
 #include <cmath>
 
-#include <lazarus/rng.h>
+#include <lazarus/Random.h>
+
+using namespace lz;
 
 void Graphics::WindowLoop()
 {
@@ -16,7 +18,7 @@ void Graphics::WindowLoop()
     sf::RenderWindow window(sf::VideoMode(window_width, window_height, bpp), "CYBORG Project");
     window.setVerticalSyncEnabled(true);
 
-    sf::Vector2f direction(Random::rng(10, 25), Random::rng(10, 25));
+    sf::Vector2f direction(Random::range(10., 25), Random::range(10., 25));
     const float velocity = std::sqrt(direction.x * direction.x + direction.y * direction.y);
 
     sf::CircleShape ball(ball_radius - 4);
