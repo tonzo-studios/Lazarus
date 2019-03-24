@@ -30,8 +30,12 @@ os: linux
 install:
   - scripts/sfml.sh
 
+env:
+  - COMMAND="scripts/build.sh"
+  - COMMAND="doxygen Doxyfile"
+
 script:
-  - scripts/build.sh
+  - (eval "$COMMAND")
 
 deploy:
   provider: pages

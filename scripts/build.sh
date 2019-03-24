@@ -13,7 +13,4 @@ cmake -DCMAKE_BUILD_TYPE="$build_type" -DSFML_DIR=./SFML/install/lib/cmake/SFML 
 make -j3
 cd tests
 [ -f lazarus_test ] && sh -c ./lazarus_test
-
-# Build documentation
 cd ../..
-doxygen Doxyfile
