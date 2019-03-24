@@ -11,6 +11,13 @@ addons:
     packages:
       - cmake
       - doxygen
+      - libopenal-dev
+      - libjpeg-dev
+      - libudev-dev
+      - libxrandr-dev
+      - libfreetype6-dev
+      - libvorbis-dev
+      - libflac-dev
 
 compiler: g++
 os: linux
