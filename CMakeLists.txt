@@ -12,6 +12,8 @@ endif()
 
 project(lazarus)
 
+include(CTest)
+
 set(LIBRARY_NAME "lazarus")
 
 file(GLOB SOURCES src/lazarus/*)
@@ -38,6 +40,8 @@ if(SFML_FOUND)
 else()
     message(FATAL_ERROR "SFML was not found.")
 endif()
+
+add_subdirectory(${PROJECT_SOURCE_DIR}/tests)
 
 include_directories(src)
 target_include_directories(${LIBRARY_NAME} PUBLIC ${CMAKE_SOURCE_DIR}/lazarus/src)
