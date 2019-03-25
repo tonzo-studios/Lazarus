@@ -1,5 +1,7 @@
 sudo: false
 
+language: generic
+
 branches:
   only:
     - master
@@ -7,10 +9,32 @@ branches:
 addons:
   apt:
     packages:
+      - g++-5
+      - cmake
       - doxygen
+      - libopenal-dev
+      - libjpeg-dev
+      - libudev-dev
+      - libxrandr-dev
+      - libfreetype6-dev
+      - libvorbis-dev
+      - libflac-dev
+    sources: &sources
+      - llvm-toolchain-precise-3.8
+      - ubuntu-toolchain-r-test
+
+compiler: g++-5
+os: linux
+
+install:
+  - scripts/sfml.sh
+
+env:
+  - COMMAND="scripts/build.sh" COMPILER_NAME=gcc CXX=g++-5 CC=gcc-5
+  - COMMAND="doxygen Doxyfile" COMPILER_NAME=gcc CXX=g++-5 CC=gcc-5
 
 script:
-  - doxygen Doxyfile
+  - (eval "$COMMAND")
 
 deploy:
   provider: pages

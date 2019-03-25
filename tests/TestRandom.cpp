@@ -113,4 +113,3 @@ TEST_CASE("range types", "[random]")
     REQUIRE(typeid(Random::range(static_cast<long>(0), static_cast<int>(2))) == typeid(long));
     REQUIRE(typeid(Random::range(static_cast<char>(0), static_cast<double>(2))) == typeid(double));
 }
-

@@ -128,7 +128,7 @@ private:
     static std::mt19937 generator;
 };
 
-template <typename C, typename T = typename C::value_type>
+template <typename C, typename T>
 T& Random::choice(C& container)
 {
     // Use size() instead of empty() to make conditions less restrictive
