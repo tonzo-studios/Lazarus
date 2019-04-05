@@ -31,7 +31,7 @@ install:
 
 env:
   - COMMAND="scripts/build.sh" COMPILER_NAME=gcc CXX=g++-5 CC=gcc-5
-  - COMMAND="doxygen Doxyfile" COMPILER_NAME=gcc CXX=g++-5 CC=gcc-5
+  - COMMAND="doxygen Doxyfile" COMPILER_NAME=gcc CXX=g++-5 CC=gcc-5 DEPLOY_DOC=1
 
 script:
   - (eval "$COMMAND")
@@ -43,3 +43,4 @@ deploy:
   github_token: $GH_REPO_TOKEN
   on:
     branch: master
+    condition: "$DEPLOY_DOC=1"
