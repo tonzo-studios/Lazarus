@@ -5,6 +5,8 @@
 #include <unordered_map>
 #include <vector>
 
+#include <lazarus/common.h>
+
 namespace __lz  // Only meant for internal use
 {
 template <typename T>
@@ -129,8 +131,7 @@ void Entity::addComponent(Args&&... args)
 
     // Check if the entity already holds a component T
     if (has<T>())
-        // TODO: Make own exception class
-        throw new std::runtime_error("The entity already holds a component of the same type");
+        throw new __lz::LazarusException("The entity already holds a component of the same type");
 
     // Construct component and add it to the map
     auto component = std::make_shared<T>(args...);
@@ -142,8 +143,7 @@ template <typename T>
 void Entity::removeComponent()
 {
     if (!has<T>())
-        // TODO: Make own exception class
-        throw new std::runtime_error("The entity already holds a component of the same type");
+        throw new __lz::LazarusException("The entity does not have a component of the specified type");
 
     components.erase(__lz::getTypeIndex<T>());
 }
