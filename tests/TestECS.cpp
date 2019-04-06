@@ -144,3 +144,45 @@ TEST_CASE("removing components from entities")
         REQUIRE(entity.has<TestComponent>());
     }
 }
+
+TEST_CASE("add entities to EntityHolder")
+{
+    EntityHolder entities;
+    SECTION("add new entity")
+    {
+        Entity* entity = entities.addEntity();
+        REQUIRE(entity != nullptr);
+        REQUIRE(entity->getId() == 1);
+        Entity* other = entities.addEntity();
+        REQUIRE(other->getId() == 2);
+        REQUIRE(entity->getId() == 1);  // still hasn't changed
+    }
+    SECTION("add existing entity")
+    {
+        Entity entity;
+        Identifier id = entity.getId();
+        REQUIRE_NOTHROW(entities.addEntity(entity));
+        // Add new empty entity
+        Entity* other = entities.addEntity();
+        REQUIRE(other->getId() == id + 1);
+    }
+}
+
+TEST_CASE("get entity from identifier")
+{
+    EntityHolder entities;
+    Entity entity;
+    Identifier id = entity.getId();
+    entity.addComponent<EmptyComponent>();
+    SECTION("get existing entity")
+    {
+        Entity* entPtr = entities.getEntity(id);
+        REQUIRE(entPtr != nullptr);
+        REQUIRE(entPtr->has<EmptyComponent>());
+    }
+    SECTION("get non-existing entity")
+    {
+        Entity* entPtr = entities.getEntity(1512);
+        REQUIRE(entPtr == nullptr);
+    }
+}
