@@ -15,7 +15,7 @@ void EntityHolder::addEntity(Entity& entity)
     entities[entity.getId()] = std::make_shared<Entity>(entity);
 }
 
-Entity* EntityHolder::getEntity(size_t entityId)
+Entity* EntityHolder::getEntity(Identifier entityId)
 {
     auto found = entities.find(entityId);
     if (found == entities.end())

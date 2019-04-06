@@ -35,7 +35,7 @@ public:
      * ID, or a nullptr if an entity with such ID does not exist in the
      * collection.
      */
-    Entity* getEntity(size_t entityId);
+    Entity* getEntity(Identifier entityId);
 
     /**
      * Returns a vector with the entities that have the specified
@@ -57,7 +57,7 @@ public:
         bool includeDeleted=false);
 
 private:
-    std::unordered_map<size_t, std::shared_ptr<Entity>> entities;
+    std::unordered_map<Identifier, std::shared_ptr<Entity>> entities;
 };
 
 template <typename... Types>

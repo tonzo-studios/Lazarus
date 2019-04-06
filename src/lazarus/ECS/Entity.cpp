@@ -2,7 +2,7 @@
 
 using namespace lz;
 
-size_t Entity::entityCount = 0;
+Identifier Entity::entityCount = 0;
 
 Entity::Entity()
     : entityId(++entityCount)

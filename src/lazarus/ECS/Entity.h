@@ -37,7 +37,7 @@ struct BaseComponent
      * 
      * It is set upon calling Entity::addComponent.
      */
-    size_t entityId;
+    Identifier entityId;
 };
 
 /**
@@ -58,7 +58,7 @@ public:
     /**
      * Returns the ID of the entity.
      */
-    size_t getId() const { return entityId; }
+    Identifier getId() const { return entityId; }
 
     /**
      * Returns whether the entity has a component of type T.
@@ -109,8 +109,8 @@ public:
     bool isDeleted() const { return deleted; }
 
 private:
-    const size_t entityId;
-    static size_t entityCount;  // Keep track of the number of entities to assign new IDs
+    const Identifier entityId;
+    static Identifier entityCount;  // Keep track of the number of entities to assign new IDs
     std::unordered_map<std::type_index, std::shared_ptr<BaseComponent>> components;
     bool deleted = false;
 };
