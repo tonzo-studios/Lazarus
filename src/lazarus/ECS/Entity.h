@@ -18,6 +18,8 @@ std::type_index getTypeIndex()
 
 namespace lz
 {
+using Identifier = size_t;
+
 /**
  * The class all components must derive from.
  * 
@@ -116,6 +118,8 @@ private:
 template <typename T>
 bool Entity::has() const
 {
+    // Make sure it is derived from BaseComponent
+    static_assert(std::is_base_of<BaseComponent, T>::value, "T must be derived of BaseComponent");
     return components.find(__lz::getTypeIndex<T>()) != components.end();
 }
 
@@ -133,7 +137,7 @@ void Entity::addComponent(Args&&... args)
 
     // Check if the entity already holds a component T
     if (has<T>())
-        throw new __lz::LazarusException("The entity already holds a component of the same type");
+        throw __lz::LazarusException("The entity already holds a component of the same type");
 
     // Construct component and add it to the map
     auto component = std::make_shared<T>(args...);
@@ -145,7 +149,7 @@ template <typename T>
 void Entity::removeComponent()
 {
     if (!has<T>())
-        throw new __lz::LazarusException("The entity does not have a component of the specified type");
+        throw __lz::LazarusException("The entity does not have a component of the specified type");
 
     components.erase(__lz::getTypeIndex<T>());
 }

@@ -134,7 +134,7 @@ T& Random::choice(C& container)
     // Use size() instead of empty() to make conditions less restrictive
     size_t size = container.size();
     if (size == 0)
-        throw new __lz::LazarusException("Container is empty");
+        throw __lz::LazarusException("Container is empty");
     
     size_t idx = Random::range(0, size - 1);
     return container[idx];
