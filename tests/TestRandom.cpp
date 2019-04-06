@@ -8,13 +8,7 @@
 
 #define TEST_SEED 12345
 
-const double TOLERANCE = 1e-5;
-
-// Checks whether a and b are closer than a certain tolerance
-bool equalFloat(double a, double b)
-{
-    return std::abs(a - b) < TOLERANCE;
-}
+using namespace Catch::literals;
 
 using namespace lz;
 
@@ -83,21 +77,21 @@ TEST_CASE("roll test", "[random]")
 TEST_CASE("normal distribution", "[random]")
 {
     Random::seed(TEST_SEED);
-    REQUIRE(equalFloat(Random::normal(0, 2), 1.1901823323));
-    REQUIRE(equalFloat(Random::normal(5, 10), 13.00446708));
-    REQUIRE(equalFloat(Random::normal(-1, 0.5), -1.52153444));
-    REQUIRE(equalFloat(Random::normal(0, 0), 0));
-    REQUIRE(equalFloat(Random::normal(0, -1), -0.488176471));
+    REQUIRE(Random::normal(0, 2) == 1.1901823323_a);
+    REQUIRE(Random::normal(5, 10) == 13.00446708_a);
+    REQUIRE(Random::normal(-1, 0.5) == -1.52153444_a);
+    REQUIRE(Random::normal(0, 0) == 0.0_a);
+    REQUIRE(Random::normal(0, -1) == -0.488176471_a);
 }
 
 TEST_CASE("float range", "[random]")
 {
     Random::seed(TEST_SEED);
-    REQUIRE(equalFloat(Random::range(0., 2), 1.7803094265));
-    REQUIRE(equalFloat(Random::range(0, 2.), 0.26141458811));
-    REQUIRE(equalFloat(Random::range(-0.5, 0.5), -0.460240503));
-    REQUIRE(equalFloat(Random::range(0., 0.), 0));
-    REQUIRE(equalFloat(Random::range(1e-5, 2e-5), 1.5320779165e-5));
+    REQUIRE(Random::range(0., 2) == 1.7803094265_a);
+    REQUIRE(Random::range(0, 2.) == 0.26141458811_a);
+    REQUIRE(Random::range(-0.5, 0.5) == -0.460240503_a);
+    REQUIRE(Random::range(0., 0.) == 0.0_a);
+    REQUIRE(Random::range(1e-5, 2e-5) == 1.5320779165e-5_a);
 
 }
 
