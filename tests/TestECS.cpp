@@ -137,4 +137,10 @@ TEST_CASE("removing components from entities")
         REQUIRE_THROWS_AS(entity.removeComponent<SecondTestComponent>(),
                           __lz::LazarusException);
     }
+    SECTION("can add component of same type after removing")
+    {
+        REQUIRE_NOTHROW(entity.removeComponent<TestComponent>());
+        REQUIRE_NOTHROW(entity.addComponent<TestComponent>(99));
+        REQUIRE(entity.has<TestComponent>());
+    }
 }
