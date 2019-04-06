@@ -152,10 +152,9 @@ TEST_CASE("add entities to EntityHolder")
     {
         Entity* entity = entities.addEntity();
         REQUIRE(entity != nullptr);
-        REQUIRE(entity->getId() == 1);
-        Entity* other = entities.addEntity();
-        REQUIRE(other->getId() == 2);
-        REQUIRE(entity->getId() == 1);  // still hasn't changed
+        Identifier id = entity->getId();
+        Entity *other = entities.addEntity();
+        REQUIRE(other->getId() == id + 1);
     }
     SECTION("add existing entity")
     {
@@ -174,6 +173,7 @@ TEST_CASE("get entity from identifier")
     Entity entity;
     Identifier id = entity.getId();
     entity.addComponent<EmptyComponent>();
+    entities.addEntity(entity);
     SECTION("get existing entity")
     {
         Entity* entPtr = entities.getEntity(id);
