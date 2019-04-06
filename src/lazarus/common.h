@@ -21,14 +21,14 @@ namespace __lz
 class LazarusException : public std::runtime_error
 {
 public:
-  LazarusException(const std::string &msg)
-      : std::runtime_error(msg)
-  {
-  }
+    LazarusException(const std::string &msg)
+        : std::runtime_error(msg)
+    {
+    }
 
-  const char *c_str() const noexcept
-  {
-      return what();
-  }
+    const char *c_str() const noexcept
+    {
+        return what();
+    }
 };
 }
