@@ -16,9 +16,6 @@ std::type_index getTypeIndex()
 
 namespace lz
 {
-// Forward declarations
-class Entity;
-
 /**
  * The class all components must derive from.
  * 
