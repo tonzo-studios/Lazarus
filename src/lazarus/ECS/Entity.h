@@ -40,6 +40,8 @@ struct BaseComponent
 
 /**
  * An Entity is a collection of components with a unique ID.
+ * 
+ * An Entity can only have one component of each type at the same time.
  */
 class Entity
 {

@@ -7,6 +7,13 @@
 
 namespace lz
 {
+/**
+ * The EntityHolder class manages a collection of entities.
+ * 
+ * It holds a collection of entities by their IDs, and has handy methods to easily
+ * manage it, like getting a list of entities which have certain types of components,
+ * or applying a function to those entities.
+ */
 class EntityHolder
 {
 public:
