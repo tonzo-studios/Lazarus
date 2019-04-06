@@ -127,7 +127,7 @@ template <typename T, typename... Args>
 void Entity::addComponent(Args&&... args)
 {
     // Make sure it is derived from BaseComponent
-    static_assert(std::is_base_of<BaseComponent, T>::value);
+    static_assert(std::is_base_of<BaseComponent, T>::value, "T must be derived of BaseComponent");
 
     // Check if the entity already holds a component T
     if (has<T>())
