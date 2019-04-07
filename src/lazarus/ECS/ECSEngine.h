@@ -72,7 +72,12 @@ std::vector<BaseSystem*>& ECSEngine::getSubscribed()
 {
     auto found = subscribers.find(__lz::getTypeIndex<EventType>());
     if (found == subscribers.end())
-        return std::vector<BaseSystem*>();  // empty vector
+    {
+        // No subscribers to this type of event yet, create vector
+        std::vector<BaseSystem*> vec;
+        subscribers[__lz::getTypeIndex<EventType>()] = vec;
+        return vec;
+    }
     return found->second;
 }
 
