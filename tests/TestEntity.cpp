@@ -144,4 +144,3 @@ TEST_CASE("removing components from entities")
         REQUIRE(entity.has<TestComponent>());
     }
 }
-
