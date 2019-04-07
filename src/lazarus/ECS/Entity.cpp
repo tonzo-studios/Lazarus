@@ -8,3 +8,18 @@ Entity::Entity()
     : entityId(++entityCount)
 {
 }
+
+bool Entity::operator==(const Entity& other)
+{
+    return getId() == other.getId();
+}
+
+bool Entity::operator!=(const Entity& other)
+{
+    return !(*this == other);
+}
+
+bool Entity::operator<(const Entity& other)
+{
+    return getId() < other.getId();
+}

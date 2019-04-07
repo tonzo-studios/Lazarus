@@ -108,6 +108,21 @@ public:
      */
     bool isDeleted() const { return deleted; }
 
+    /**
+     * Returns true if the IDs of the entities are the same.
+     */
+    bool operator==(const Entity& other);
+
+    /**
+     * Returns true if the IDs of the entities are different.
+     */
+    bool operator!=(const Entity& other);
+    
+    /**
+     * Returns true if the ID of this entity is smaller than the other.
+     */
+    bool operator<(const Entity& other);
+
 private:
     const Identifier entityId;
     static Identifier entityCount;  // Keep track of the number of entities to assign new IDs
