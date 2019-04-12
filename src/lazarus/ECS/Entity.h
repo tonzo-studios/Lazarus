@@ -21,10 +21,11 @@ namespace lz
 using Identifier = size_t;
 
 /**
- * The class all components must derive from.
+ * Abstract component class from which all components must derive.
  * 
  * A component is just a collection of data, i.e., it has no methods.
- * In the ECS pattern, the logic that uses this data is in the Systems, which act on
+ * 
+ * In ECS, the logic that uses this data is in the Systems, which act on
  * the entities holding these components.
  */
 struct BaseComponent

@@ -7,6 +7,21 @@ namespace lz
 {
 class BaseSystem;
 
+/**
+ * Main driver to work with entities, components and systems.
+ * 
+ * The ECSEngine class manages and puts together all the pieces of the ECS model.
+ * It holds the entities and systems, and acts as a controller for the creation,
+ * deletion and modification of these objects.
+ * 
+ * It also acts as an observer for the classes that implement the EventListener
+ * interface, and is able to emit events of any type to these listeners, allowing
+ * communication between systems.
+ * 
+ * @see Entity
+ * @see BaseSystem
+ * @see EventListener
+ */
 class ECSEngine
 {
 public:
