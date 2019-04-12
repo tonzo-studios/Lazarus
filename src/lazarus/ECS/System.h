@@ -33,7 +33,7 @@ public:
      * The ECSEngine will call the update method on all systems it has when
      * the update method from the ECSEngine is called.
      */
-    virtual void update(EntityHolder& entities)
+    virtual void update(ECSEngine& engine)
     {
     }
 

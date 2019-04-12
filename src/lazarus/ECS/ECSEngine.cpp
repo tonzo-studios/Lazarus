@@ -4,10 +4,21 @@ using namespace lz;
 
 Entity* ECSEngine::addEntity()
 {
-    return entities.addEntity();
+    Entity entity;
+    std::shared_ptr<Entity> entPtr = std::make_shared<Entity>(entity);
+    entities[entity.getId()] = entPtr;
+    return entPtr.get();
 }
 
-void ECSEngine::addEntity(Entity& entity)
+void ECSEngine::addEntity(Entity &entity)
 {
-    entities.addEntity(entity);
+    entities[entity.getId()] = std::make_shared<Entity>(entity);
+}
+
+Entity* ECSEngine::getEntity(Identifier entityId)
+{
+    auto found = entities.find(entityId);
+    if (found == entities.end())
+        return nullptr;
+    return found->second.get();
 }
