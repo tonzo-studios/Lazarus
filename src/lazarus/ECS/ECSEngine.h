@@ -66,22 +66,35 @@ public:
         typename std::common_type<std::function<void(Entity*, Types*...)>>::type&& func,
         bool includeDeleted=false);
 
+    /**
+     * Subscribes the event listener to the list of listeners of that event type.
+     * 
+     * When an event of type EventType is emitted, it will be passed to all the
+     * event listeners subscribed to this event type, by calling their receive
+     * method.
+     * 
+     * @see EventListener
+     */
     template <typename EventType>
-    void subscribe(EventListener<EventType>* eventListener);
+    void subscribe(EventListener<EventType>& eventListener);
 
+    /**
+     * Unsubscribes the event listener from the list of listeners of that event type.
+     */
     template <typename EventType>
-    void unsubscribe(EventListener<EventType>* eventListener);
+    void unsubscribe(EventListener<EventType>& eventListener);
 
-private:
-    template <typename EventType>
-    std::vector<EventListener<EventType>*>& getSubscribed();
+    /**
+     * Updates all the systems in the engine.
+     */
+    virtual void update();
 
 private:
     std::unordered_map<Identifier, std::shared_ptr<Entity>> entities;
-    // Maps system id -> system
-    std::unordered_map<Identifier, std::shared_ptr<BaseSystem>> systems;
+    std::vector<std::shared_ptr<BaseSystem>> systems;
     // Maps event type index -> list of event listeners for that event type
-    std::unordered_map<std::type_index, std::vector<__lz::BaseEventListener*>> subscribers;
+    std::unordered_map<std::type_index,
+                       std::vector<std::shared_ptr<__lz::BaseEventListener>>> subscribers;
 };
 
 template <typename... Types>
@@ -114,54 +127,42 @@ void ECSEngine::applyToEach(
 }
 
 template <typename EventType>
-void ECSEngine::subscribe(EventListener<EventType>* eventListener)
+void ECSEngine::subscribe(EventListener<EventType>& eventListener)
 {
     std::type_index typeId = __lz::getTypeIndex<EventType>();
     auto found = subscribers.find(typeId);
     if (found == subscribers.end())
     {
         // No subscribers to this type of event yet, create vector
-        std::vector<EventListener<EventType>*> vec;
-        vec.push_back(eventListener);
+        std::vector<std::shared_ptr<__lz::BaseEventListener>> vec;
+        vec.push_back(std::make_shared<__lz::BaseEventListener>(eventListener));
         subscribers[typeId] = vec;
     }
     else
     {
         // There already exists a list of subscribers to this event type
-        found->second.push_back(eventListener);
+        found->second.push_back(std::make_shared<__lz::BaseEventListener>(eventListener));
     }
 }
 
 template <typename EventType>
-void ECSEngine::unsubscribe(EventListener<EventType>* eventListener)
+void ECSEngine::unsubscribe(EventListener<EventType>& eventListener)
 {
-    std::vector<EventListener<EventType>*>& eventSubscribers = getSubscribed<EventType>();
-    for (auto it = eventSubscribers.begin(); it != eventSubscribers.end(); ++it)
+    auto found = subscribers.find(__lz::getTypeIndex<EventType>());
+    if (found != subscribers.end())
     {
-        if (*it == system)
+        auto eventSubscribers = found->second;
+        for (auto it = eventSubscribers.begin(); it != eventSubscribers.end(); ++it)
         {
-            // System found, remove it from the subscriber list
-            eventSubscribers.erase(it);
-            return;
+            if (*it == system)
+            {
+                // System found, remove it from the subscriber list
+                eventSubscribers.erase(it);
+                return;
+            }
         }
     }
     // System was not found
     throw __lz::LazarusException("ECS engine was not subscribed to the given event");
 }
-
-
-template <typename EventType>
-std::vector<EventListener<EventType>*>& ECSEngine::getSubscribed()
-{
-    auto found = subscribers.find(__lz::getTypeIndex<EventType>());
-    if (found == subscribers.end())
-    {
-        // No subscribers to this type of event yet, create vector
-        std::vector<BaseSystem*> vec;
-        subscribers[__lz::getTypeIndex<EventType>()] = vec;
-        return vec;
-    }
-    return found->second;
-}
-
 }  // namespace lz

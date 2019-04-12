@@ -37,12 +37,12 @@ struct EmptyComponent : public BaseComponent
 TEST_CASE("entity creation")
 {
     Entity entity;
+    Identifier id = entity.getId();
     SECTION("entity ids")
     {
-        REQUIRE(entity.getId() == 1);
-        Entity another;
-        REQUIRE(entity.getId() == 1);  // The original entity's ID hasn't changed
-        REQUIRE(another.getId() == 2);  // New entity gets new ID
+Entity another;
+        REQUIRE(entity.getId() == id);  // The original entity's ID hasn't changed
+        REQUIRE(another.getId() == id + 1);  // New entity gets new ID
     }
     SECTION("entity has no components on creation")
     {
