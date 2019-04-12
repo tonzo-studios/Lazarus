@@ -214,3 +214,21 @@ TEST_CASE("updateable management")
         REQUIRE(system.x == 1);
     }
 }
+
+TEST_CASE("garbage collector")
+{
+    ECSEngine engine;
+    Entity *entity = engine.addEntity();
+    Identifier id = entity->getId();
+    REQUIRE_FALSE(entity->isDeleted());
+    REQUIRE(engine.getEntity(id) != nullptr);
+    
+    // Mark for deletion
+    entity->markForDeletion();
+    REQUIRE(engine.getEntity(id) != nullptr);
+    REQUIRE(entity->isDeleted());
+    
+    // Garbage collect
+    engine.update();
+    REQUIRE(engine.getEntity(id) == nullptr);
+}
