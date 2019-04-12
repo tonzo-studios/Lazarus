@@ -14,32 +14,32 @@ std::type_index getTypeIndex()
 {
     return std::type_index(typeid(T));
 }
+
+class BaseComponentHandle
+{
+public:
+    virtual ~BaseComponentHandle() = default;
+};
+
+template <typename Component>
+class ComponentHandle : public BaseComponentHandle
+{
+public:
+    ComponentHandle(std::shared_ptr<Component> comp)
+        : component(std::move(comp))
+    {
+    }
+
+    Component *get() { return component.get(); }
+
+private:
+    std::shared_ptr<Component> component;
+};
 }
 
 namespace lz
 {
 using Identifier = size_t;
-
-/**
- * Abstract component class from which all components must derive.
- * 
- * A component is just a collection of data, i.e., it has no methods.
- * 
- * In ECS, the logic that uses this data is in the Systems, which act on
- * the entities holding these components.
- */
-struct BaseComponent
-{
-    // Add virtual destructor to make class polymorphic
-    virtual ~BaseComponent() = default;
-
-    /**
-     * ID of the entity that holds this component.
-     * 
-     * It is set upon calling Entity::addComponent.
-     */
-    Identifier entityId;
-};
 
 /**
  * An Entity is a collection of components with a unique ID.
@@ -64,7 +64,7 @@ public:
     /**
      * Returns whether the entity has a component of type T.
      */
-    template <typename T>
+    template <typename Component>
     bool has() const;
 
     /**
@@ -76,14 +76,13 @@ public:
     /**
      * Attaches a component to the entity.
      * 
-     * The type specified must be a type derived from BaseComponent.
-     * The component will be constructed with the passed arguments and attached to
+     * The component will be list-initialized with the arguments passed and attached to
      * the entity's pool of components.
      * 
      * If the entity already has a component of the specified type, an exception
      * will be thrown.
      */
-    template <typename T, typename... Args>
+    template <typename Component, typename... Args>
     void addComponent(Args&&... args);
 
     /**
@@ -92,7 +91,7 @@ public:
      * If the entity does not have a component of the specified type, an exception
      * is thrown.
      */
-    template <typename T>
+    template <typename Component>
     void removeComponent();
 
     /**
@@ -100,8 +99,8 @@ public:
      * 
      * If the entity does not hold a component of that type, a nullptr will be returned.
      */
-    template <typename T>
-    T* get();
+    template <typename Component>
+    Component* get();
 
     /**
      * Returns whether this entity is marked for deletion upon the next pass of
@@ -127,16 +126,14 @@ public:
 private:
     const Identifier entityId;
     static Identifier entityCount;  // Keep track of the number of entities to assign new IDs
-    std::unordered_map<std::type_index, std::shared_ptr<BaseComponent>> components;
+    std::unordered_map<std::type_index, std::shared_ptr<__lz::BaseComponentHandle>> components;
     bool deleted = false;
 };
 
-template <typename T>
+template <typename Component>
 bool Entity::has() const
 {
-    // Make sure it is derived from BaseComponent
-    static_assert(std::is_base_of<BaseComponent, T>::value, "T must be derived of BaseComponent");
-    return components.find(__lz::getTypeIndex<T>()) != components.end();
+    return components.find(__lz::getTypeIndex<Component>()) != components.end();
 }
 
 template <typename T, typename V, typename... Types>
@@ -145,37 +142,36 @@ bool Entity::has() const
     return has<T>() && has<V, Types...>();
 }
 
-template <typename T, typename... Args>
+template <typename Component, typename... Args>
 void Entity::addComponent(Args&&... args)
 {
-    // Make sure it is derived from BaseComponent
-    static_assert(std::is_base_of<BaseComponent, T>::value, "T must be derived of BaseComponent");
-
     // Check if the entity already holds a component T
-    if (has<T>())
+    if (has<Component>())
         throw __lz::LazarusException("The entity already holds a component of the same type");
 
     // Construct component and add it to the map
-    auto component = std::make_shared<T>(args...);
-    component.get()->entityId = getId();
-    components[__lz::getTypeIndex<T>()] = component;
+    std::shared_ptr<__lz::BaseComponentHandle> handle(
+        new __lz::ComponentHandle<Component>(std::make_shared<Component>(args...))
+    );
+    components[__lz::getTypeIndex<Component>()] = std::move(handle);
 }
 
-template <typename T>
+template <typename Component>
 void Entity::removeComponent()
 {
-    if (!has<T>())
+    if (!has<Component>())
         throw __lz::LazarusException("The entity does not have a component of the specified type");
 
-    components.erase(__lz::getTypeIndex<T>());
+    components.erase(__lz::getTypeIndex<Component>());
 }
 
-template <typename T>
-T* Entity::get()
+template <typename Component>
+Component* Entity::get()
 {
-    auto found = components.find(__lz::getTypeIndex<T>());
+    auto found = components.find(__lz::getTypeIndex<Component>());
     if (found == components.end())
         return nullptr;
-    return dynamic_cast<T*>(found->second.get());
+    auto compHandle = dynamic_cast<__lz::ComponentHandle<Component>*>(found->second.get());
+    return compHandle->get();
 }
 }  // namespace lz

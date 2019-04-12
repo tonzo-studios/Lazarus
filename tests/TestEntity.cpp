@@ -6,7 +6,7 @@
 using namespace lz;
 
 // Component for testing purposes
-struct TestComponent : public BaseComponent
+struct TestComponent
 {
     TestComponent(int num)
         : num(num)
@@ -16,7 +16,7 @@ struct TestComponent : public BaseComponent
 };
 
 // Another test component, with multiple constructor params
-struct SecondTestComponent : public BaseComponent
+struct SecondTestComponent
 {
     SecondTestComponent(std::string string, int num, bool testBool)
         : string(string)
@@ -30,7 +30,7 @@ struct SecondTestComponent : public BaseComponent
 };
 
 // A test component with no data
-struct EmptyComponent : public BaseComponent
+struct EmptyComponent
 {
 };
 
@@ -105,7 +105,6 @@ TEST_CASE("getting components from entities")
     SECTION("getting existing component")
     {
         REQUIRE(comp != nullptr);
-        REQUIRE(comp->entityId == entity.getId());
         REQUIRE(comp->num == -5);
         REQUIRE(comp->string == "test");
     }
