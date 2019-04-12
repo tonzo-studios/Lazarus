@@ -1,5 +1,4 @@
 #include <lazarus/ECS/ECSEngine.h>
-#include <lazarus/ECS/System.h>
 
 using namespace lz;
 
@@ -24,10 +23,15 @@ Entity* ECSEngine::getEntity(Identifier entityId)
     return found->second.get();
 }
 
+void ECSEngine::addUpdateable(Updateable* updateable)
+{
+    updateables.emplace_back(updateable);
+}
+
 void ECSEngine::update()
 {
-    for (auto systemPtr : systems)
+    for (auto updateable : updateables)
     {
-        systemPtr.get()->update(*this);
+        updateable.get()->update(*this);
     }
 }

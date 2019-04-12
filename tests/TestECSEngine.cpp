@@ -5,6 +5,32 @@
 
 using namespace lz;
 
+struct TestEvent
+{
+    Entity* ent;
+    int num;
+};
+
+class TestUpdateableSystem : public Updateable
+{
+public:
+    virtual void update(ECSEngine& engine)
+    {
+        ++x;
+    }
+
+    int x = 0;
+};
+
+class TestListenerSystem : public EventListener<TestEvent>
+{
+public:
+    virtual void receive(ECSEngine& engine, const TestEvent& event)
+    {
+
+    }
+};
+
 TEST_CASE("add entities to the engine")
 {
     ECSEngine engine;
@@ -44,4 +70,4 @@ TEST_CASE("get entity from identifier")
         Entity* entPtr = engine.getEntity(1512);
         REQUIRE(entPtr == nullptr);
     }
-} 
+}
