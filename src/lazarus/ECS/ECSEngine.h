@@ -197,7 +197,8 @@ void ECSEngine::emit(const EventType& event)
         auto eventSubscribers = found->second;
         for (auto it = eventSubscribers.begin(); it != eventSubscribers.end(); ++it)
         {
-            *it->receive(*this, event);
+            auto* listener = dynamic_cast<EventListener<EventType>*>(*it);
+            listener->receive(*this, event);
         }
     }
 }
