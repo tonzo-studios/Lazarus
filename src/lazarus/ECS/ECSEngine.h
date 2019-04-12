@@ -86,6 +86,12 @@ public:
     void unsubscribe(EventListener<EventType>* eventListener);
 
     /**
+     * Emit an event to all listeners of that type of event.
+     */
+    template <typename EventType>
+    void emit(const EventType& event);
+
+    /**
      * Adds an updateable object to the engine.
      * 
      * The update method on this object will be called when the engine is updated.
@@ -96,6 +102,9 @@ public:
      * Updates all the updateable objects in the engine.
      */
     virtual void update();
+
+private:
+    // TODO: garbageCollect
 
 private:
     std::unordered_map<Identifier, std::shared_ptr<Entity>> entities;
@@ -162,7 +171,7 @@ void ECSEngine::unsubscribe(EventListener<EventType>* eventListener)
         auto eventSubscribers = found->second;
         for (auto it = eventSubscribers.begin(); it != eventSubscribers.end(); ++it)
         {
-            if (*it == system)
+            if (*it == eventListener)
             {
                 // System found, remove it from the subscriber list
                 eventSubscribers.erase(it);
@@ -172,5 +181,19 @@ void ECSEngine::unsubscribe(EventListener<EventType>* eventListener)
     }
     // System was not found
     throw __lz::LazarusException("ECS engine was not subscribed to the given event");
+}
+
+template <typename EventType>
+void ECSEngine::emit(const EventType& event)
+{
+    auto found = subscribers.find(__lz::getTypeIndex<EventType>());
+    if (found != subscribers.end())
+    {
+        auto eventSubscribers = found->second;
+        for (auto it = eventSubscribers.begin(); it != eventSubscribers.end(); ++it)
+        {
+            *it->receive(*this, event);
+        }
+    }
 }
 }  // namespace lz

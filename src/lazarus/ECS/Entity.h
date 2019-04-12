@@ -76,8 +76,9 @@ public:
     /**
      * Attaches a component to the entity.
      * 
-     * The component will be list-initialized with the arguments passed and attached to
-     * the entity's pool of components.
+     * The component will be constructed with the arguments passed and attached to
+     * the entity's pool of components. Therefore, the component must have a
+     * constructor that matches the arguments passed.
      * 
      * If the entity already has a component of the specified type, an exception
      * will be thrown.
