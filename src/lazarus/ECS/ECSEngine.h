@@ -96,7 +96,7 @@ public:
      * 
      * The update method on this object will be called when the engine is updated.
      */
-    void addUpdateable(Updateable* updateable);
+    void registerUpdateable(Updateable* updateable);
 
     /**
      * Updates all the updateable objects in the engine.

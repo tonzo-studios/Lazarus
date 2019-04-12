@@ -23,7 +23,7 @@ Entity* ECSEngine::getEntity(Identifier entityId)
     return found->second.get();
 }
 
-void ECSEngine::addUpdateable(Updateable* updateable)
+void ECSEngine::registerUpdateable(Updateable* updateable)
 {
     updateables.emplace_back(updateable);
 }
