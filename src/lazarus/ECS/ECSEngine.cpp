@@ -33,7 +33,7 @@ void ECSEngine::update()
     // Update all updateable systems
     for (auto updateable : updateables)
     {
-        updateable.get()->update(*this);
+        updateable->update(*this);
     }
 
     // Run garbage collector

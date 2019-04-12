@@ -113,10 +113,10 @@ private:
 
 private:
     std::unordered_map<Identifier, std::shared_ptr<Entity>> entities;
-    std::vector<std::shared_ptr<Updateable>> updateables;
+    std::vector<Updateable*> updateables;
     // Maps event type index -> list of event listeners for that event type
     std::unordered_map<std::type_index,
-                       std::vector<std::shared_ptr<__lz::BaseEventListener>>> subscribers;
+                       std::vector<__lz::BaseEventListener*>> subscribers;
 };
 
 template <typename... Types>
@@ -156,14 +156,14 @@ void ECSEngine::subscribe(EventListener<EventType>* eventListener)
     if (found == subscribers.end())
     {
         // No subscribers to this type of event yet, create vector
-        std::vector<std::shared_ptr<__lz::BaseEventListener>> vec;
-        vec.emplace_back(eventListener);
+        std::vector<__lz::BaseEventListener*> vec;
+        vec.push_back(eventListener);
         subscribers[typeId] = vec;
     }
     else
     {
         // There already exists a list of subscribers to this event type
-        found->second.emplace_back(eventListener);
+        found->second.push_back(eventListener);
     }
 }
 
