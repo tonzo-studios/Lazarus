@@ -110,6 +110,14 @@ public:
     bool isDeleted() const { return deleted; }
 
     /**
+     * Marks the entity for deletion.
+     * 
+     * An entity marked for deletion will be cleared from memory on the next pass of the
+     * ECS engine garbage collector.
+     */
+    void markForDeletion() { deleted = true; }
+
+    /**
      * Returns true if the IDs of the entities are the same.
      */
     bool operator==(const Entity& other);

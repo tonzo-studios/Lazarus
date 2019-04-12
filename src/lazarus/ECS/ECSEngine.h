@@ -100,11 +100,16 @@ public:
 
     /**
      * Updates all the updateable objects in the engine.
+     * 
+     * Will also garbage collect deleted entities.
      */
     virtual void update();
 
 private:
-    // TODO: garbageCollect
+    /**
+     * Removes deleted entities.
+     */
+    void garbageCollect();
 
 private:
     std::unordered_map<Identifier, std::shared_ptr<Entity>> entities;
