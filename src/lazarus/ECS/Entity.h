@@ -7,7 +7,7 @@
 
 #include <lazarus/common.h>
 
-namespace __lz  // Only meant for internal use
+namespace __lz  // Meant for internal use only
 {
 template <typename T>
 std::type_index getTypeIndex()

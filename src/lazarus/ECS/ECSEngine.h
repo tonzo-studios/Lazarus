@@ -1,6 +1,7 @@
 #pragma once
 
 #include <lazarus/ECS/EntityHolder.h>
+#include <lazarus/ECS/EventListener.h>
 
 namespace lz
 {
@@ -14,45 +15,46 @@ public:
     void addEntity(Entity& entity);
 
     template <typename EventType>
-    void subscribe(BaseSystem* system);
+    void subscribe(EventListener<EventType>* eventListener);
 
     template <typename EventType>
-    void unsubscribe(BaseSystem* system);
+    void unsubscribe(EventListener<EventType>* eventListener);
 
+private:
     template <typename EventType>
-    std::vector<BaseSystem*>& getSubscribed();
+    std::vector<EventListener<EventType>*>& getSubscribed();
 
 private:
     EntityHolder entities;
     // Maps system id -> system
     std::unordered_map<Identifier, std::shared_ptr<BaseSystem>> systems;
-    // Maps event type index -> list of systems subscribed to that event type
-    std::unordered_map<std::type_index, std::vector<BaseSystem*>> subscribers;
+    // Maps event type index -> list of event listeners for that event type
+    std::unordered_map<std::type_index, std::vector<__lz::BaseEventListener*>> subscribers;
 };
 
 template <typename EventType>
-void ECSEngine::subscribe(BaseSystem* system)
+void ECSEngine::subscribe(EventListener<EventType>* eventListener)
 {
     std::type_index typeId = __lz::getTypeIndex<EventType>();
     auto found = subscribers.find(typeId);
     if (found == subscribers.end())
     {
         // No subscribers to this type of event yet, create vector
-        std::vector<BaseSystem*> vec;
-        vec.push_back(system);
+        std::vector<EventListener<EventType>*> vec;
+        vec.push_back(eventListener);
         subscribers[typeId] = vec;
     }
     else
     {
         // There already exists a list of subscribers to this event type
-        found->second.push_back(system);
+        found->second.push_back(eventListener);
     }
 }
 
 template <typename EventType>
-void ECSEngine::unsubscribe(BaseSystem* system)
+void ECSEngine::unsubscribe(EventListener<EventType>* eventListener)
 {
-    std::vector<BaseSystem*>& eventSubscribers = getSubscribed<EventType>();
+    std::vector<EventListener<EventType>*>& eventSubscribers = getSubscribed<EventType>();
     for (auto it = eventSubscribers.begin(); it != eventSubscribers.end(); ++it)
     {
         if (*it == system)
@@ -63,12 +65,12 @@ void ECSEngine::unsubscribe(BaseSystem* system)
         }
     }
     // System was not found
-    throw __lz::LazarusException("System was not subscribed to the given event");
+    throw __lz::LazarusException("ECS engine was not subscribed to the given event");
 }
 
 
 template <typename EventType>
-std::vector<BaseSystem*>& ECSEngine::getSubscribed()
+std::vector<EventListener<EventType>*>& ECSEngine::getSubscribed()
 {
     auto found = subscribers.find(__lz::getTypeIndex<EventType>());
     if (found == subscribers.end())
