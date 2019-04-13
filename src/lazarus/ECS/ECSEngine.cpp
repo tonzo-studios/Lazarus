@@ -25,7 +25,7 @@ Entity* ECSEngine::getEntity(Identifier entityId)
 
 void ECSEngine::registerUpdateable(Updateable* updateable)
 {
-    updateables.emplace_back(updateable);
+    updateables.push_back(updateable);
 }
 
 void ECSEngine::update()

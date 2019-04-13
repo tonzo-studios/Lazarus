@@ -8,8 +8,6 @@
 
 namespace lz
 {
-class BaseSystem;
-
 /**
  * Main driver to work with entities, components and systems.
  * 
@@ -140,7 +138,7 @@ void ECSEngine::applyToEach(
     {
         Entity* entity = it->second.get();
 
-        if (includeDeleted && entity->isDeleted())
+        if (!includeDeleted && entity->isDeleted())
             continue;
 
         if (entity->has<Types...>())
