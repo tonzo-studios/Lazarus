@@ -2,6 +2,7 @@
 
 #include <memory>
 #include <typeindex>
+#include <sstream>
 #include <unordered_map>
 #include <vector>
 
@@ -156,7 +157,12 @@ void Entity::addComponent(Args&&... args)
 {
     // Check if the entity already holds a component T
     if (has<Component>())
-        throw __lz::LazarusException("The entity already holds a component of the same type");
+    {
+        std::stringstream msg;
+        msg << "Entity " << getId() << " already holds a component of type "
+            << typeid(Component).name();
+        throw __lz::LazarusException(msg.str());
+    }
 
     // Construct component and add it to the map
     std::shared_ptr<__lz::BaseComponentHandle> handle(
@@ -169,7 +175,12 @@ template <typename Component>
 void Entity::removeComponent()
 {
     if (!has<Component>())
-        throw __lz::LazarusException("The entity does not have a component of the specified type");
+    {
+        std::stringstream msg;
+        msg << "Entity " << getId() << " does not have a component of type "
+            << typeid(Component).name();
+        throw __lz::LazarusException(msg.str());
+    }
 
     components.erase(__lz::getTypeIndex<Component>());
 }
@@ -179,7 +190,7 @@ Component* Entity::get()
 {
     auto found = components.find(__lz::getTypeIndex<Component>());
     if (found == components.end())
-        return nullptr;
+        return nullptr;  // TODO: Log this case
     auto compHandle = dynamic_cast<__lz::ComponentHandle<Component>*>(found->second.get());
     return compHandle->get();
 }

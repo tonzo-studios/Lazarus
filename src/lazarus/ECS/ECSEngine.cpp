@@ -12,6 +12,7 @@ Entity* ECSEngine::addEntity()
 
 void ECSEngine::addEntity(Entity& entity)
 {
+    // TODO: Log the case when entity already exists in the map
     entities[entity.getId()] = std::make_shared<Entity>(entity);
 }
 

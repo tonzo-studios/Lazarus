@@ -1,6 +1,7 @@
 #pragma once
 
 #include <functional>
+#include <sstream>
 
 #include <lazarus/ECS/Entity.h>
 #include <lazarus/ECS/EventListener.h>
@@ -49,6 +50,9 @@ public:
     /**
      * Returns a vector with the entities that have the specified
      * components.
+     * 
+     * If includeDeleted is set to true, entities that are marked for
+     * deletion will also be included.
      */
     template <typename... Types>
     std::vector<Entity*> entitiesWithComponents(bool includeDeleted=false);
@@ -59,6 +63,9 @@ public:
      * 
      * The function passed can be a reference to an existing function, a lambda,
      * or an std::function.
+     * 
+     * If includeDeleted is set to true, the function will also be applied to
+     * entities that are marked for deletion.
      */
     template <typename... Types>
     void applyToEach(
@@ -171,29 +178,33 @@ void ECSEngine::unsubscribe(EventListener<EventType>* eventListener)
     auto found = subscribers.find(__lz::getTypeIndex<EventType>());
     if (found != subscribers.end())
     {
-        auto eventSubscribers = found->second;
-        for (auto it = eventSubscribers.begin(); it != eventSubscribers.end(); ++it)
+        auto eventListeners = found->second;
+        for (auto it = eventListeners.begin(); it != eventListeners.end(); ++it)
         {
             if (*it == eventListener)
             {
                 // System found, remove it from the subscriber list
-                eventSubscribers.erase(it);
+                eventListeners.erase(it);
                 return;
             }
         }
     }
     // System was not found
-    throw __lz::LazarusException("ECS engine was not subscribed to the given event");
+    std::stringstream msg;
+    msg << "ECS engine was not subscribed to the event ";
+    msg << typeid(EventType).name();
+    throw __lz::LazarusException(msg.str());
 }
 
 template <typename EventType>
 void ECSEngine::emit(const EventType& event)
 {
+    // TODO: Log case in which an event is emitted but no listeners for that type exist
     auto found = subscribers.find(__lz::getTypeIndex<EventType>());
     if (found != subscribers.end())
     {
-        auto eventSubscribers = found->second;
-        for (auto it = eventSubscribers.begin(); it != eventSubscribers.end(); ++it)
+        auto eventListeners = found->second;
+        for (auto it = eventListeners.begin(); it != eventListeners.end(); ++it)
         {
             auto* listener = dynamic_cast<EventListener<EventType>*>(*it);
             listener->receive(*this, event);
