@@ -18,17 +18,20 @@ using ulong = unsigned long;
  */
 namespace __lz
 {    
-class LazarusException : public std::runtime_error
+class LazarusException : public std::exception
 {
 public:
     LazarusException(const std::string &msg)
-        : std::runtime_error(msg)
+        : msg(msg)
     {
     }
 
-    const char *c_str() const noexcept
+    virtual const char* what() const throw()
     {
-        return what();
+        return msg.c_str();
     }
+
+private:
+    std::string msg;
 };
 }
