@@ -7,6 +7,13 @@
 
 using namespace lz;
 
+void __lz::throwOutOfBoundsException(const Position2D& pos)
+{
+    std::stringstream msg;
+    msg << "Position (" << pos.x << ", " << pos.y << ") is out of bounds.";
+    throw __lz::LazarusException(msg.str());
+}
+
 Position2D::Position2D(int x, int y)
     : x(x)
     , y(y)
@@ -32,23 +39,33 @@ unsigned SquareGridMap::getHeight() const
     return height;
 }
 
-bool SquareGridMap::isOutOfBounds(const Position2D& pos) const
-{
-    return pos.x < 0 || pos.y < 0 || pos.x >= width || pos.y >= height;
-}
-
 bool SquareGridMap::isWalkable(const Position2D& pos) const
 {
     if (isOutOfBounds(pos))
-        return false;
-    return costs[pos.y][pos.x] < 0;
+        return false;  // TODO: Log this case
+    return costs[pos.y][pos.x] < 0.;
 }
 
 bool SquareGridMap::isTransparent(const Position2D& pos) const
 {
     if (isOutOfBounds(pos))
-        return false;
+        return false;  // TODO: Log this case
     return transparencies[pos.y][pos.x];
+}
+
+bool SquareGridMap::isOutOfBounds(const Position2D& pos) const
+{
+    return pos.x < 0 || pos.y < 0 || pos.x >= width || pos.y >= height;
+}
+
+float SquareGridMap::getCost(const Position2D& pos) const
+{
+    if (isOutOfBounds(pos))
+    {
+        __lz::throwOutOfBoundsException(pos);  // TODO: Log this case
+    }
+
+    return costs[pos.y][pos.x];
 }
 
 std::vector<Position2D> SquareGridMap::neighbours(const Position2D& pos) const
@@ -92,26 +109,24 @@ void SquareGridMap::setCost(const Position2D& pos, float cost)
 {
     if (isOutOfBounds(pos))
     {
-        std::stringstream msg;
-        msg << "Position (" << pos.x << ", " << pos.y << ") is out of bounds.";
-        throw __lz::LazarusException(msg.str());
+        __lz::throwOutOfBoundsException(pos);  // TODO: Log this case
     }
 
     costs[pos.y][pos.x] = cost;
 }
 
-void SquareGridMap::setUnwalkable(const Position2D& pos)
+void SquareGridMap::setWalkable(const Position2D& pos, bool walkable)
 {
-    setCost(pos, -1.);
+    if (isWalkable(pos) && walkable)
+        return;  // do nothing
+    setCost(pos, walkable ? 1. : -1.);
 }
 
 void SquareGridMap::setTransparency(const Position2D& pos, bool transparent)
 {
     if (isOutOfBounds(pos))
     {
-        std::stringstream msg;
-        msg << "Position (" << pos.x << ", " << pos.y << ") is out of bounds.";
-        throw __lz::LazarusException(msg.str());
+        __lz::throwOutOfBoundsException(pos);  // TODO: Log this case
     }
 
     transparencies[pos.y][pos.x] = transparent;
