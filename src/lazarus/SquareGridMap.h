@@ -1,6 +1,6 @@
 #pragma once
 
-#include <lazarus/Map.h>
+#include <vector>
 
 namespace lz
 {
@@ -20,19 +20,25 @@ struct Position2D
 class SquareGridMap
 {
 public:
-    SquareGridMap() = default;
+    SquareGridMap(unsigned width, unsigned height, bool diagonals=false);
 
-    SquareGridMap(bool diagonals);
+    unsigned getWidth() const;
+    
+    unsigned getHeight() const;
 
-    bool isWalkable(const Position2D& pos);
+    bool isWalkable(const Position2D& pos) const;
 
-    bool isTransparent(const Position2D& pos);
+    bool isTransparent(const Position2D& pos) const;
 
-    float getCost(const Position2D& pos);
+    bool isOutOfBounds(const Position2D& pos) const;
 
-    void setAt(const Position2D& pos, bool walkable, bool transparent=false);
+    float getCost(const Position2D& pos) const;
 
-    void setAt(const Position2D& pos, float cost, bool transparent=false);
+    void setCost(const Position2D& pos, float cost);
+
+    void setUnwalkable(const Position2D& pos);
+
+    void setTransparency(const Position2D& pos, bool transparent);
 
     virtual std::vector<Position2D> neighbours(const Position2D& position) const;
 
@@ -42,6 +48,8 @@ public:
 
 private:
     bool diagonals = false;
+    unsigned width, height;
+    std::vector<std::vector<float>> costs;
+    std::vector<std::vector<bool>> transparencies;
 };
-
 }  // namespace lz
