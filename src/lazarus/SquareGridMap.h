@@ -17,12 +17,22 @@ struct Position
     int x, y;
 };
 
-class SquareGridMap : public Map<Position>
+class SquareGridMap
 {
 public:
     SquareGridMap() = default;
 
     SquareGridMap(bool diagonals);
+
+    bool isWalkable(const Position& pos);
+
+    bool isTransparent(const Position& pos);
+
+    float getCost(const Position& pos);
+
+    void setAt(const Position& pos, bool walkable, bool transparent=false);
+
+    void setAt(const Position& pos, float cost, bool transparent=false);
 
     virtual std::vector<Position> neighbours(const Position& position) const;
 
