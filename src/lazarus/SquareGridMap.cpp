@@ -4,25 +4,25 @@
 
 using namespace lz;
 
-Position::Position(int x, int y)
+Position2D::Position2D(int x, int y)
     : x(x)
     , y(y)
 {
 }
 
-bool Position::operator<(const Position& other) const
+bool Position2D::operator<(const Position2D& other) const
 {
     if (y == other.y)
         return x < other.x;
     return y < other.y;
 }
 
-bool Position::operator==(const Position& other) const
+bool Position2D::operator==(const Position2D& other) const
 {
     return x == other.x && y == other.y;
 }
 
-bool Position::operator!=(const Position& other) const
+bool Position2D::operator!=(const Position2D& other) const
 {
     return !(*this == other);
 }
@@ -32,20 +32,20 @@ SquareGridMap::SquareGridMap(bool diagonals)
 {
 }
 
-std::vector<Position> SquareGridMap::neighbours(const Position& position) const
+std::vector<Position2D> SquareGridMap::neighbours(const Position2D& position) const
 {
-    std::vector<Position> result;
+    std::vector<Position2D> result;
     int x, y;
     x = position.x;
     y = position.y;
-    std::array<Position, 4> neighbourPositions{
-        Position(x - 1, y),
-        Position(x + 1, y),
-        Position(x, y - 1),
-        Position(x, y + 1)
+    std::array<Position2D, 4> neighbourPositions{
+        Position2D(x - 1, y),
+        Position2D(x + 1, y),
+        Position2D(x, y - 1),
+        Position2D(x, y + 1)
     };
 
-    for (Position neighbour : neighbourPositions)
+    for (Position2D neighbour : neighbourPositions)
     {
         if (isWalkable(neighbour))
             result.push_back(neighbour);
@@ -53,13 +53,13 @@ std::vector<Position> SquareGridMap::neighbours(const Position& position) const
 
     if (diagonals)
     {
-        std::array<Position, 4> diagonalPositions{
-            Position(x - 1, y - 1),
-            Position(x + 1, y + 1),
-            Position(x + 1, y - 1),
-            Position(x - 1, y + 1)};
+        std::array<Position2D, 4> diagonalPositions{
+            Position2D(x - 1, y - 1),
+            Position2D(x + 1, y + 1),
+            Position2D(x + 1, y - 1),
+            Position2D(x - 1, y + 1)};
 
-        for (Position neighbour : diagonalPositions)
+        for (Position2D neighbour : diagonalPositions)
         {
             if (isWalkable(neighbour))
                 result.push_back(neighbour);
@@ -69,15 +69,15 @@ std::vector<Position> SquareGridMap::neighbours(const Position& position) const
     return result;
 }
 
-void SquareGridMap::carveRoom(const Position& topLeft,
-                              const Position& bottomRight,
+void SquareGridMap::carveRoom(const Position2D& topLeft,
+                              const Position2D& bottomRight,
                               float cost)
 {
     for (int x = topLeft.x; x < bottomRight.x; ++x)
     {
         for (int y = topLeft.y; y < bottomRight.y; ++y)
         {
-            setAt(Position(x, y), cost, true);
+            setAt(Position2D(x, y), cost, true);
         }
     }
 }

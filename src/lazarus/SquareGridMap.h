@@ -4,15 +4,15 @@
 
 namespace lz
 {
-struct Position
+struct Position2D
 {
-    Position(int x, int y);
+    Position2D(int x, int y);
 
-    bool operator<(const Position& other) const;
+    bool operator<(const Position2D& other) const;
 
-    bool operator==(const Position& other) const;
+    bool operator==(const Position2D& other) const;
 
-    bool operator!=(const Position& other) const;
+    bool operator!=(const Position2D& other) const;
 
     int x, y;
 };
@@ -24,20 +24,20 @@ public:
 
     SquareGridMap(bool diagonals);
 
-    bool isWalkable(const Position& pos);
+    bool isWalkable(const Position2D& pos);
 
-    bool isTransparent(const Position& pos);
+    bool isTransparent(const Position2D& pos);
 
-    float getCost(const Position& pos);
+    float getCost(const Position2D& pos);
 
-    void setAt(const Position& pos, bool walkable, bool transparent=false);
+    void setAt(const Position2D& pos, bool walkable, bool transparent=false);
 
-    void setAt(const Position& pos, float cost, bool transparent=false);
+    void setAt(const Position2D& pos, float cost, bool transparent=false);
 
-    virtual std::vector<Position> neighbours(const Position& position) const;
+    virtual std::vector<Position2D> neighbours(const Position2D& position) const;
 
-    void carveRoom(const Position& topLeft,
-                   const Position& bottomRight,
+    void carveRoom(const Position2D& topLeft,
+                   const Position2D& bottomRight,
                    float cost=1);
 
 private:
