@@ -24,9 +24,11 @@ SquareGridMap::SquareGridMap(unsigned width, unsigned height, bool diagonals)
     : diagonals(diagonals)
     , width(width)
     , height(height)
-    , costs(height, std::vector<float>(width, -1.))
-    , transparencies(height, std::vector<bool>(width, false))
+    , costs(width * height, -1.)
+    , transparencies(width * height, false)
 {
+    if (width == 0 || height == 0)
+        throw __lz::LazarusException("SquareGridMap width and height must be positive.");
 }
 
 unsigned SquareGridMap::getWidth() const
@@ -43,14 +45,14 @@ bool SquareGridMap::isWalkable(const Position2D& pos) const
 {
     if (isOutOfBounds(pos))
         return false;  // TODO: Log this case
-    return costs[pos.y][pos.x] < 0.;
+    return costs[pos.y * width + pos.x] < 0.;
 }
 
 bool SquareGridMap::isTransparent(const Position2D& pos) const
 {
     if (isOutOfBounds(pos))
         return false;  // TODO: Log this case
-    return transparencies[pos.y][pos.x];
+    return transparencies[pos.y * width + pos.x];
 }
 
 bool SquareGridMap::isOutOfBounds(const Position2D& pos) const
@@ -65,7 +67,7 @@ float SquareGridMap::getCost(const Position2D& pos) const
         __lz::throwOutOfBoundsException(pos);  // TODO: Log this case
     }
 
-    return costs[pos.y][pos.x];
+    return costs[pos.y * width + pos.x];
 }
 
 std::vector<Position2D> SquareGridMap::neighbours(const Position2D& pos) const
@@ -112,7 +114,7 @@ void SquareGridMap::setCost(const Position2D& pos, float cost)
         __lz::throwOutOfBoundsException(pos);  // TODO: Log this case
     }
 
-    costs[pos.y][pos.x] = cost;
+    costs[pos.y * width + pos.x] = cost;
 }
 
 void SquareGridMap::setWalkable(const Position2D& pos, bool walkable)
@@ -129,7 +131,7 @@ void SquareGridMap::setTransparency(const Position2D& pos, bool transparent)
         __lz::throwOutOfBoundsException(pos);  // TODO: Log this case
     }
 
-    transparencies[pos.y][pos.x] = transparent;
+    transparencies[pos.y * width + pos.x] = transparent;
 }
 
 void SquareGridMap::carveRoom(const Position2D& topLeft,

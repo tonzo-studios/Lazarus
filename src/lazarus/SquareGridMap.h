@@ -165,8 +165,8 @@ public:
 private:
     bool diagonals = false;
     unsigned width, height;
-    std::vector<std::vector<float>> costs;
-    std::vector<std::vector<bool>> transparencies;
+    std::vector<float> costs;
+    std::vector<bool> transparencies;
 };
 }  // namespace lz
 
