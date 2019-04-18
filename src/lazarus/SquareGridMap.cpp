@@ -45,7 +45,7 @@ bool SquareGridMap::isWalkable(const Position2D& pos) const
 {
     if (isOutOfBounds(pos))
         return false;  // TODO: Log this case
-    return costs[pos.y * width + pos.x] < 0.;
+    return costs[pos.y * width + pos.x] >= 0.;
 }
 
 bool SquareGridMap::isTransparent(const Position2D& pos) const
@@ -67,11 +67,22 @@ float SquareGridMap::getCost(const Position2D& pos) const
         __lz::throwOutOfBoundsException(pos);  // TODO: Log this case
     }
 
+    if (!isWalkable(pos))
+    {
+        std::stringstream msg;
+        msg << "Tried to get cost of unwalkable tile at position ("
+            << pos.x << ", " << pos.y << ").";
+        throw __lz::LazarusException(msg.str());
+    }
+
     return costs[pos.y * width + pos.x];
 }
 
 std::vector<Position2D> SquareGridMap::neighbours(const Position2D& pos) const
 {
+    if (isOutOfBounds(pos))
+        __lz::throwOutOfBoundsException(pos);  // TODO: Log this case
+
     std::vector<Position2D> result;
     int x = pos.x, y = pos.y;
 

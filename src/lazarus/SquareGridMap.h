@@ -93,7 +93,8 @@ public:
      * 
      * @param pos A 2D position.
      * 
-     * @throws LazarusException If the position is outside of the boundaries of the map.
+     * @throws LazarusException If the position is outside of the boundaries of the map,
+     * or if the tile is not walkable.
      * 
      * @return The cost of accessing the tile from an adjacent tile.
      */
@@ -143,6 +144,8 @@ public:
      * tile at the given position will also be considered.
      * 
      * @param pos A 2D position.
+     * 
+     * @throws LazarusException If the position is out of bounds.
      * 
      * @return A list of walkable tiles adjacent to the tile at position `pos`.
      */
