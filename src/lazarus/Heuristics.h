@@ -1,7 +1,5 @@
 #pragma once
 
-#include <cmath>
-
 #include <lazarus/SquareGridMap.h>
 
 namespace lz
