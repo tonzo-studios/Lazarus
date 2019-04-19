@@ -189,9 +189,9 @@ void SquareGridMap::carveRoom(const Position2D& topLeft,
                               const Position2D& bottomRight,
                               float cost)
 {
-    for (int x = topLeft.x; x < bottomRight.x; ++x)
+    for (int x = topLeft.x; x <= bottomRight.x; ++x)
     {
-        for (int y = topLeft.y; y < bottomRight.y; ++y)
+        for (int y = topLeft.y; y <= bottomRight.y; ++y)
         {
             Position2D pos(x, y);
             setCost(pos, cost);

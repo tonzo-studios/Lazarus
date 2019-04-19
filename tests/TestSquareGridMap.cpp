@@ -1,13 +1,19 @@
 #include "catch/catch.hpp"
 
-#include <algorithm>
-
 #include <lazarus/SquareGridMap.h>
 #include <lazarus/common.h>
 
 using namespace Catch::literals;
 
 using namespace lz;
+
+bool positionInVector(const std::vector<Position2D>& vec, const Position2D& pos)
+{
+    for (auto posInVec : vec)
+        if (pos.x == posInVec.x && pos.y == posInVec.y)
+            return true;
+    return false;
+}
 
 TEST_CASE("map dimensions")
 {
@@ -192,20 +198,112 @@ TEST_CASE("neighbours")
         Position2D(3, 4)
     };
     for (auto pos : walkableTiles)
+    {
         map.setWalkable(pos, true);
-
+        mapWithDiagonals.setWalkable(pos, true);
+    }
     SECTION("neighbours of walkable corner/border tiles for map without diagonals")
     {
+        // Top-left corner
         auto neighbours = map.neighbours(Position2D(0, 0));
-        // TODO:
+        REQUIRE(neighbours.size() == 2);
+        REQUIRE(positionInVector(neighbours, Position2D(1, 0)));
+        REQUIRE(positionInVector(neighbours, Position2D(0, 1)));
+
+        // Top-right corner
+        neighbours = map.neighbours(Position2D(4, 0));
+        REQUIRE(neighbours.empty());
+
+        // Right border
+        neighbours = map.neighbours(Position2D(4, 3));
+        REQUIRE(neighbours.size() == 1);
+        REQUIRE(positionInVector(neighbours, Position2D(3, 3)));
     }
     SECTION("neighbours of walkable non-corner/border tiles for map without diagonals")
     {
-        // TODO:
+        auto neighbours = map.neighbours(Position2D(1, 3));
+        REQUIRE(neighbours.size() == 2);
+        REQUIRE(positionInVector(neighbours, Position2D(0, 3)));
+        REQUIRE(positionInVector(neighbours, Position2D(1, 4)));
     }
     SECTION("neighbours of out of bounds tile throws an exception")
     {
         // Out of bounds tile
         REQUIRE_THROWS_AS(map.neighbours(Position2D(10, 15)), __lz::LazarusException);
+    }
+    SECTION("neighbours of walkable corner/border tiles for map with diagonals")
+    {
+        // Top-left corner
+        auto neighbours = mapWithDiagonals.neighbours(Position2D(0, 0));
+        REQUIRE(neighbours.size() == 2);
+        REQUIRE(positionInVector(neighbours, Position2D(1, 0)));
+        REQUIRE(positionInVector(neighbours, Position2D(0, 1)));
+
+        // Top-right corner
+        neighbours = mapWithDiagonals.neighbours(Position2D(4, 0));
+        REQUIRE(neighbours.size() == 1);
+        REQUIRE(positionInVector(neighbours, Position2D(3, 1)));
+
+        // Right border
+        neighbours = mapWithDiagonals.neighbours(Position2D(4, 3));
+        REQUIRE(neighbours.size() == 3);
+        REQUIRE(positionInVector(neighbours, Position2D(3, 2)));
+        REQUIRE(positionInVector(neighbours, Position2D(3, 3)));
+        REQUIRE(positionInVector(neighbours, Position2D(3, 4)));
+    }
+    SECTION("neighbours of walkable non-corner/border tiles for map with diagonals")
+    {
+        auto neighbours = mapWithDiagonals.neighbours(Position2D(1, 3));
+        REQUIRE(neighbours.size() == 4);
+        REQUIRE(positionInVector(neighbours, Position2D(0, 3)));
+        REQUIRE(positionInVector(neighbours, Position2D(1, 4)));
+        REQUIRE(positionInVector(neighbours, Position2D(0, 4)));
+        REQUIRE(positionInVector(neighbours, Position2D(2, 4)));
+    }
+    SECTION("neighbours with coordinates")
+    {
+        auto neighbours = map.neighbours(2, 1);
+        REQUIRE(neighbours.size() == 2);
+        REQUIRE(positionInVector(neighbours, Position2D(3, 1)));
+        REQUIRE(positionInVector(neighbours, Position2D(2, 0)));
+    }
+}
+
+TEST_CASE("carveRoom")
+{
+    const int width{5};
+    const int height{5};
+    SquareGridMap map(width, height);
+    SECTION("carve room in the center")
+    {
+        REQUIRE_NOTHROW(map.carveRoom(Position2D(1, 1), Position2D(3, 3)));
+        for (int x = 0; x < width; ++x)
+        {
+            for (int y = 0; y < height; ++y)
+            {
+                if (x >= 1 && x <= 3 && y >= 1 && y <= 3)
+                {
+                    REQUIRE(map.isWalkable(x, y));
+                    REQUIRE(map.isTransparent(x, y));
+                }
+                else
+                {
+                    REQUIRE_FALSE(map.isWalkable(x, y));
+                    REQUIRE_FALSE(map.isTransparent(x, y));
+                }
+            }
+        }
+    }
+    SECTION("carve room outside of boundaries")
+    {
+        REQUIRE_THROWS_AS(map.carveRoom(Position2D(3, 3), Position2D(7, 7)),
+                          __lz::LazarusException);
+    }
+    SECTION("carve room with wrong corners")
+    {
+        REQUIRE_NOTHROW(map.carveRoom(Position2D(3, 3), Position2D(1, 1)));
+        for (int x = 0; x < width; ++x)
+            for (int y = 0; y < height; ++y)
+                REQUIRE_FALSE(map.isWalkable(x, y));  // No changes made
     }
 }
