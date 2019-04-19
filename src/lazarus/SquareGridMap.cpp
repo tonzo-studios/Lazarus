@@ -48,6 +48,11 @@ bool SquareGridMap::isWalkable(const Position2D& pos) const
     return costs[pos.y * width + pos.x] >= 0.;
 }
 
+bool SquareGridMap::isWalkable(int x, int y) const
+{
+    return isWalkable(Position2D(x, y));
+}
+
 bool SquareGridMap::isTransparent(const Position2D& pos) const
 {
     if (isOutOfBounds(pos))
@@ -55,9 +60,19 @@ bool SquareGridMap::isTransparent(const Position2D& pos) const
     return transparencies[pos.y * width + pos.x];
 }
 
+bool SquareGridMap::isTransparent(int x, int y) const
+{
+    return isTransparent(Position2D(x, y));
+}
+
 bool SquareGridMap::isOutOfBounds(const Position2D& pos) const
 {
-    return pos.x < 0 || pos.y < 0 || pos.x >= width || pos.y >= height;
+    return isOutOfBounds(pos.x, pos.y);
+}
+
+bool SquareGridMap::isOutOfBounds(int x, int y) const
+{
+    return x < 0 || y < 0 || x >= width || y >= height;
 }
 
 float SquareGridMap::getCost(const Position2D& pos) const
@@ -76,6 +91,11 @@ float SquareGridMap::getCost(const Position2D& pos) const
     }
 
     return costs[pos.y * width + pos.x];
+}
+
+float SquareGridMap::getCost(int x, int y) const
+{
+    return getCost(Position2D(x, y));
 }
 
 std::vector<Position2D> SquareGridMap::neighbours(const Position2D& pos) const
@@ -118,6 +138,11 @@ std::vector<Position2D> SquareGridMap::neighbours(const Position2D& pos) const
     return result;
 }
 
+std::vector<Position2D> SquareGridMap::neighbours(int x, int y) const
+{
+    return neighbours(Position2D(x, y));
+}
+
 void SquareGridMap::setCost(const Position2D& pos, float cost)
 {
     if (isOutOfBounds(pos))
@@ -128,11 +153,21 @@ void SquareGridMap::setCost(const Position2D& pos, float cost)
     costs[pos.y * width + pos.x] = cost;
 }
 
+void SquareGridMap::setCost(int x, int y, float cost)
+{
+    setCost(Position2D(x, y), cost);
+}
+
 void SquareGridMap::setWalkable(const Position2D& pos, bool walkable)
 {
     if (isWalkable(pos) && walkable)
         return;  // do nothing
     setCost(pos, walkable ? 1. : -1.);
+}
+
+void SquareGridMap::setWalkable(int x, int y, bool walkable)
+{
+    setWalkable(Position2D(x, y), walkable);
 }
 
 void SquareGridMap::setTransparency(const Position2D& pos, bool transparent)
@@ -143,6 +178,11 @@ void SquareGridMap::setTransparency(const Position2D& pos, bool transparent)
     }
 
     transparencies[pos.y * width + pos.x] = transparent;
+}
+
+void SquareGridMap::setTransparency(int x, int y, bool transparent)
+{
+    setTransparency(Position2D(x, y), transparent);
 }
 
 void SquareGridMap::carveRoom(const Position2D& topLeft,

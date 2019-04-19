@@ -65,8 +65,21 @@ public:
      * 
      * @return `true` if the tile at the given position is walkable, `false` if it is
      * not walkable or if the position is out of the boundaries of the map.
+     * 
+     * @see isWalkable(int, int) const
      */
     bool isWalkable(const Position2D& pos) const;
+
+    /**
+     * Overloaded version of @ref isWalkable(const Position2D&) const
+     * which takes the coordinates of the position as arguments.
+     * 
+     * @param x The x coordinate of a 2D position.
+     * @param y The y coordinate of a 2D position.
+     * 
+     * @see isWalkable(const Position2D&) const
+     */
+    bool isWalkable(int x, int y) const;
 
     /**
      * Returns whether the tile at the given position is transparent.
@@ -75,8 +88,21 @@ public:
      * 
      * @return `true` if the tile at the given position is transparent, `false` if it is
      * not transparent or if the position is out of the boundaries of the map.
+     * 
+     * @see isTransparent(int, int) const
      */
     bool isTransparent(const Position2D& pos) const;
+
+    /**
+     * Overloaded version of @ref isTransparent(const Position2D&) const
+     * which takes the coordinates of the position as arguments.
+     * 
+     * @param x The x coordinate of a 2D position.
+     * @param y The y coordinate of a 2D position.
+     * 
+     * @see isTransparent(const Position2D&) const
+     */
+    bool isTransparent(int x, int y) const;
 
     /**
      * Returns whether the given position is within the boundaries of the map.
@@ -85,8 +111,21 @@ public:
      * 
      * @return `true` if the tile is within the boundaries of the map, that is,
      * `0 <= x < width` and `0 <= y < height`, and `false` otherwise.
+     * 
+     * @see isOutOfBounds(int, int) const
      */
     bool isOutOfBounds(const Position2D& pos) const;
+
+    /**
+     * Overloaded version of @ref isOutOfBounds(const Position2D&) const
+     * which takes the coordinates of the position as arguments.
+     * 
+     * @param x The x coordinate of a 2D position.
+     * @param y The y coordinate of a 2D position.
+     * 
+     * @see isOutOfBounds(const Position2D&) const
+     */
+    bool isOutOfBounds(int x, int y) const;
 
     /**
      * Gets the cost of the tile at the given position.
@@ -97,8 +136,21 @@ public:
      * or if the tile is not walkable.
      * 
      * @return The cost of accessing the tile from an adjacent tile.
+     * 
+     * @see getCost(int, int) const
      */
     float getCost(const Position2D& pos) const;
+
+    /**
+     * Overloaded version of @ref getCost(const Position2D&) const
+     * which takes the coordinates of the position as arguments.
+     * 
+     * @param x The x coordinate of a 2D position.
+     * @param y The y coordinate of a 2D position.
+     * 
+     * @see getCost(const Position2D&) const
+     */
+    float getCost(int x, int y) const;
 
     /**
      * Sets the cost of the tile at the given position.
@@ -107,8 +159,21 @@ public:
      * @param cost The new cost of the tile.
      * 
      * @throws LazarusException If the position is outside of the boundaries of the map.
+     * 
+     * @see setCost(int, int, float);
      */
     void setCost(const Position2D& pos, float cost);
+
+    /**
+     * Overloaded version of @ref setCost(const Position2D& pos, float cost) const
+     * which takes the coordinates of the position as arguments.
+     * 
+     * @param x The x coordinate of a 2D position.
+     * @param y The y coordinate of a 2D position.
+     * 
+     * @see setCost(const Position2D& pos, float cost) const
+     */
+    void setCost(int x, int y, float cost);
 
     /**
      * Changes the walkability of the tile at the given position.
@@ -122,8 +187,21 @@ public:
      * @param walkable The new walkability state for the tile.
      * 
      * @throws LazarusException If the position is outside of the boundaries of the map.
+     * 
+     * @see setWalkable(int, int, bool);
      */
     void setWalkable(const Position2D& pos, bool walkable);
+
+    /**
+     * Overloaded version of @ref setWalkable(const Position2D& pos, bool walkable) const
+     * which takes the coordinates of the position as arguments.
+     * 
+     * @param x The x coordinate of a 2D position.
+     * @param y The y coordinate of a 2D position.
+     * 
+     * @see setWalkable(const Position2D& pos, bool walkable) const
+     */
+    void setWalkable(int x, int y, bool walkable);
 
     /**
      * Changes the transparency of the tile at the given position.
@@ -132,8 +210,21 @@ public:
      * @param transparent The new transparency state for the tile.
      * 
      * @throws LazarusException If the position is outside of the boundaries of the map.
+     * 
+     * @see setTransparency(int, int, bool)
      */
     void setTransparency(const Position2D& pos, bool transparent);
+
+    /**
+     * Overloaded version of @ref setTransparency(const Position2D& pos, bool transparent) const
+     * which takes the coordinates of the position as arguments.
+     * 
+     * @param x The x coordinate of a 2D position.
+     * @param y The y coordinate of a 2D position.
+     * 
+     * @see setTransparency(const Position2D& pos, bool transparent) const
+     */
+    void setTransparency(int x, int y, bool transparent);
 
     /**
      * Returns a vector with the walkable tiles adjacent to the tile at the given position.
@@ -148,8 +239,21 @@ public:
      * @throws LazarusException If the position is out of bounds.
      * 
      * @return A list of walkable tiles adjacent to the tile at position `pos`.
+     * 
+     * @see neighbours(int, int) const
      */
     virtual std::vector<Position2D> neighbours(const Position2D& pos) const;
+
+    /**
+     * Overloaded version of @ref neighbours(const Position2D& pos) const
+     * which takes the coordinates of the position as arguments.
+     * 
+     * @param x The x coordinate of a 2D position.
+     * @param y The y coordinate of a 2D position.
+     * 
+     * @see neighbours(const Position2D& pos) const
+     */
+    virtual std::vector<Position2D> neighbours(int x, int y) const;
 
     /**
      * Makes a rectangular area of tiles walkable and transparent.
